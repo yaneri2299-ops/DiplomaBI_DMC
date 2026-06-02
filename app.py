@@ -4,5 +4,5 @@ st.title("Proyecto Final Diploma BI")
 
 st.sidebar.title("Parámetros")
 
-st.image("python.png")
-st.sidebar.image("dmc.png")
+st.image("python.png",width=500)
+st.sidebar.image("dmc.png",width=300)
