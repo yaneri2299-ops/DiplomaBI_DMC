@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.title("Proyecto Final Diploma BI")
 
@@ -11,7 +12,7 @@ st.write("Elaborado por Yaneri Martinez")
 
 archivo = st.file_uploader("Cargue el archivo excel o csv")
 
-if archivo is not None :
+if archivo is not None:
     
     if archivo.name.endswith(".csv"):
         data = pd.read_csv(archivo)
