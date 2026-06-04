@@ -18,7 +18,7 @@ if archivo is not None :
       st.write(data)
 
     elif archivo.name.endswith(".xlsx")
-        data =pd.read_excel(archivo)
+        data = pd.read_excel(archivo)
       st.write(data)
     else:
       st.write("Formato no válido")
