@@ -15,7 +15,7 @@ if archivo is not None :
     if archivo.name.endswith(".csv"):
         data = pd.read_csv(archivo)
       st.write(data)
-    elif archivo.nameendswith(".xlsx")
+    elif archivo.name.endswith(".xlsx")
         data =pd.read_excel(archivo)
       st.write(data)
 else:
