@@ -4,6 +4,9 @@
 
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # =====================================
 # SESSION STATE
@@ -192,59 +195,122 @@ elif modulos == "Análisis visual":
 
         st.dataframe(data.head())
 
-        # ==========================
-        # COLUMNAS NUMÉRICAS
-        # ==========================
+        lista_columna_numerica = data.select_dtypes(
+            include="number"
+        ).columns.tolist()
 
-        lista_columna_numerica = (
-            data.select_dtypes(
-                include="number"
-            ).columns.tolist()
-        )
+        lista_columna_categorica = data.select_dtypes(
+            include=["object", "category"]
+        ).columns.tolist()
 
-        if len(lista_columna_numerica) > 0:
+        if len(lista_columna_numerica) == 0:
+
+            st.warning("No existen columnas numéricas.")
+
+        else:
 
             variable_numerica = st.selectbox(
                 "Seleccione la columna numérica",
                 lista_columna_numerica
             )
 
-            st.success(
-                f"Variable numérica seleccionada: {variable_numerica}"
+            if len(lista_columna_categorica) > 0:
+
+                variable_categorica = st.selectbox(
+                    "Seleccione la columna categórica",
+                    lista_columna_categorica
+                )
+
+            tab1, tab2, tab3, tab4 = st.tabs(
+                [
+                    "Distribución",
+                    "Comparación",
+                    "Correlación",
+                    "Conclusiones"
+                ]
             )
 
-        else:
+            with tab1:
 
-            st.warning(
-                "No existen columnas numéricas."
-            )
+                st.subheader("Histograma")
 
-        # ==========================
-        # COLUMNAS CATEGÓRICAS
-        # ==========================
+                fig = px.histogram(
+                    data,
+                    x=variable_numerica
+                )
 
-        lista_columna_categorica = (
-            data.select_dtypes(
-                include=["object", "category"]
-            ).columns.tolist()
-        )
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True
+                )
 
-        if len(lista_columna_categorica) > 0:
+                st.subheader("Boxplot")
 
-            variable_categorica = st.selectbox(
-                "Seleccione la columna categórica",
-                lista_columna_categorica
-            )
+                fig2 = px.box(
+                    data,
+                    y=variable_numerica
+                )
 
-            st.success(
-                f"Variable categórica seleccionada: {variable_categorica}"
-            )
+                st.plotly_chart(
+                    fig2,
+                    use_container_width=True
+                )
 
-        else:
+            with tab2:
 
-            st.warning(
-                "No existen columnas categóricas."
-            )
+                if len(lista_columna_categorica) > 0:
+
+                    fig3 = px.box(
+                        data,
+                        x=variable_categorica,
+                        y=variable_numerica
+                    )
+
+                    st.plotly_chart(
+                        fig3,
+                        use_container_width=True
+                    )
+
+            with tab3:
+
+                if len(lista_columna_numerica) > 1:
+
+                    corr = data[
+                        lista_columna_numerica
+                    ].corr()
+
+                    fig4, ax = plt.subplots(
+                        figsize=(8,5)
+                    )
+
+                    sns.heatmap(
+                        corr,
+                        annot=True,
+                        cmap="coolwarm",
+                        ax=ax
+                    )
+
+                    st.pyplot(fig4)
+
+            with tab4:
+
+                st.subheader("Conclusiones")
+
+                st.write(
+                    f"La variable analizada es {variable_numerica}."
+                )
+
+                st.write(
+                    "El histograma muestra la distribución de los datos."
+                )
+
+                st.write(
+                    "El boxplot permite identificar posibles valores atípicos."
+                )
+
+                st.write(
+                    "El mapa de calor muestra la relación entre variables numéricas."
+                )
 
     else:
 
